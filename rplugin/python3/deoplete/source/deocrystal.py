@@ -1,11 +1,11 @@
+import atexit
 import json
-import os
-import subprocess
-import sys
 
 from .base import Base
-from deoplete.util import getlines
+
 from subprocess import Popen, PIPE
+from deoplete.util import getlines
+
 
 class Source(Base):
     def __init__(self, vim):
@@ -15,6 +15,14 @@ class Source(Base):
         self.filetypes = ['crystal']
         self.mark = '[CR]'
         self.min_pattern_length = 1
+
+        self.lib     = self.vim.vars['deoplete#sources#crystal#lib']
+        self.cracker = self.vim.vars['deoplete#sources#crystal#bin']
+
+        cmd = [self.cracker, 'server', self.lib]
+
+        process = Popen(cmd, stdout=PIPE, stdin=PIPE)
+        atexit.register(lambda: process.kill())
 
     def get_complete_position(self, context):
         pos = context['input'].rfind('.')
@@ -27,8 +35,8 @@ class Source(Base):
         buf = '\n'.join(getlines(self.vim, 1, context['position'][1]))
 
         try:
-            process = Popen(cmd, stdout = PIPE, stdin = PIPE)
-            res     = process.communicate(input = str.encode(buf))[0]
+            process = Popen(cmd, stdout=PIPE, stdin=PIPE)
+            res = process.communicate(input=str.encode(buf))[0]
 
             results = json.loads(res)['results']
 
@@ -42,11 +50,11 @@ class Source(Base):
                     word = word.split(".")[1]
 
                 suggestions.append({
-                    'word': word.split("(")[0],
-                    'kind': result['type'],
-                    'abbr': result['name']
+                    'abbr': word,
+                    'word': word.split("(")[0]
                 })
-        except:
+
+        except BaseException:
             suggestions = []
 
-        return(suggestions)
+        return suggestions
