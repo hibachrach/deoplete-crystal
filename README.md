@@ -1,4 +1,4 @@
-<img src='https://github.com/yoru/deoplete-crystal/blob/master/screenshots/logo.png' width='70' align='right'>
+<img src='https://github.com/yoru/deoplete-crystal/blob/master/screenshots/neovim.png' width='70' align='right'>
 
 # Deoplete source for Crystal
 
