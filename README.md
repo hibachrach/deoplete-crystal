@@ -1,8 +1,4 @@
-<img src='https://github.com/yoru/deoplete-crystal/blob/master/screenshots/neovim.png' width='70' align='left'>
-
 # Deoplete source for Crystal
-
-<br>
 
 Provides integration between [Cracker](https://github.com/TechMagister/cracker)
 and Deoplete, an asynchronous completion framework for vim.

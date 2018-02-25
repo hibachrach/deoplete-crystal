@@ -2,10 +2,9 @@ import atexit
 import json
 
 from .base import Base
-
-from subprocess import Popen, PIPE
 from deoplete.util import getlines
-
+from pathlib import Path
+from subprocess import Popen, PIPE
 
 class Source(Base):
     def __init__(self, vim):
@@ -16,13 +15,19 @@ class Source(Base):
         self.mark = '[CR]'
         self.min_pattern_length = 1
 
-        self.lib     = self.vim.vars['deoplete#sources#crystal#lib']
-        self.cracker = self.vim.vars['deoplete#sources#crystal#bin']
+    # FIXME, HACK
+    def on_init(self, context):
+        lib     = self.vim.vars['deoplete#sources#crystal#lib']
+        cracker = self.vim.vars['deoplete#sources#crystal#bin']
 
-        cmd = [self.cracker, 'server', self.lib]
+        pid = '/tmp/cracker.pid'
+        cmd = [cracker, 'server', lib]
 
-        process = Popen(cmd, stdout=PIPE, stdin=PIPE)
-        atexit.register(lambda: process.kill())
+        if not Path(pid).is_file():
+            process = Popen(cmd, stdout=PIPE, stdin=PIPE)
+
+            with open(pid, 'w+') as f:
+                f.write('{}'.format(process.pid))
 
     def get_complete_position(self, context):
         pos = context['input'].rfind('.')
