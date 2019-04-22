@@ -1,3 +1,6 @@
+# NOTE
+This is actually a fork from a user that has since deleted their GitHub account. I do not have any immediate plans on continuing its development.
+
 # Deoplete source for Crystal
 
 Provides integration between [Cracker](https://github.com/TechMagister/cracker)
